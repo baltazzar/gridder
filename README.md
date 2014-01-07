@@ -1,4 +1,4 @@
-gridder
+GRIDDER
 =======
 
-Módulo front-end de tabulação de dados.
+> Módulo front-end de tabulação de dados.

@@ -1,0 +1,18 @@
+{
+	"name": "gridder",
+	"version": "0.1.0",
+	"private": true,
+	"devDependencies": {
+		"grunt": "*",
+		"grunt-contrib-watch": "*",
+		"grunt-contrib-handlebars": "*",
+		"grunt-contrib-jshint": "*",
+		"grunt-contrib-requirejs": "*"
+	},
+	"volo": {
+		"url": "https://raw.github.com/baltazzar/gridder/{version}/dist/gridder.js"
+	},
+	"scripts": {
+		"preinstall": "npm install -g grunt-cli"
+	}
+}
