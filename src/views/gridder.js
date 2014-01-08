@@ -5,7 +5,7 @@ define(function(require, exports, module){
 	require(['../templates']);
 
 	module.exports = Marionette.ItemView.extend({
-		template: 'gridder/grid.tpl',
+		template: 'gridder/gridder.tpl',
 		lastColOptions: null,
 		changeValuesOptions: null,
 

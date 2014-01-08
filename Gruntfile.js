@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 				}
 			},
 			gridder: {
-				src: ['src/templates/grid.tpl'],
+				src: ['src/templates/gridder.tpl'],
 				dest: 'src/templates.js'
 			}
 		},
