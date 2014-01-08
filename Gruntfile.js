@@ -17,11 +17,11 @@ module.exports = function(grunt) {
 				namespace: 'Handlebars.templates',
 				processName: function(filePath) {
 					filePath = filePath.split('templates/');
-					return 'auth/' + filePath[1];
+					return 'gridder/' + filePath[1];
 				},
 				processPartialName: function(filePath) {
 					filePath = filePath.split('templates/');
-					return 'auth/' + filePath[1];
+					return 'gridder/' + filePath[1];
 				}
 			},
 			gridder: {

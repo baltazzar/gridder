@@ -2,8 +2,10 @@ define(function(require, exports, module){
 
 	var Marionette = require('marionette');
 
+	require(['../templates']);
+
 	module.exports = Marionette.ItemView.extend({
-		template: 'grid/grid.tpl',
+		template: 'gridder/grid.tpl',
 		lastColOptions: null,
 		changeValuesOptions: null,
 
@@ -51,6 +53,8 @@ define(function(require, exports, module){
 
 		setLastCol: function(options) {
 			var	that = this;
+
+			options.header = options.header ? options.header : '';
 
 			if(this.collection.length > 0) {
 
