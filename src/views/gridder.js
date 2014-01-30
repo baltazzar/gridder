@@ -8,12 +8,20 @@ define(function(require, exports, module){
 		template: 'gridder/gridder.tpl',
 		lastColOptions: null,
 		changeValuesOptions: null,
+		getColsCallback: null,
+		getRowsCallback: null,
 
 		initialize: function(options) {
 			this.collection = options.collection;
 			this.render();
 			this.listenTo(this.collection, 'all', _.debounce(function() {
 				this.render();
+				if(this.getColsCallback) {
+					this.getCols(this.getColsCallback);
+				}
+				if(this.getRowsCallback) {
+					this.getRows(this.getRowsCallback);
+				}
 				if(this.lastColOptions) {
 					this.setLastCol(this.lastColOptions);
 				}
@@ -45,10 +53,12 @@ define(function(require, exports, module){
 
 		getCols: function(callback) {
 			_.each(this.$('table td'), callback);
+			this.getColsCallback = callback;
 		},
 
 		getRows: function(callback) {
 			_.each(this.$('table tr'), callback);
+			this.getRowsCallback = callback;
 		},
 
 		setLastCol: function(options) {
