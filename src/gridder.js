@@ -1,10 +1,10 @@
-define(function(require, exports, module){
+// Gridder
 
-	var $ = require('jquery'),
-		GridderView = require('./views/gridder');
+module.exports = function(marionette) {
 
-	$.fn.Gridder = function(options) {
-		options.el = this;
+	var GridderView = require('./gridder_view')(marionette);
+
+	return function(options) {
 		return new GridderView(options);
-	};
-});
+	}
+};

@@ -1,4 +1,2 @@
-GRIDDER
-=======
-
-> Módulo front-end de tabulação de dados.
+# GRIDDER
+> Módulo para exibição de registros de maneira tabular.
