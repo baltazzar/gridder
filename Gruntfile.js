@@ -82,5 +82,4 @@ module.exports = function (grunt) {
 		grunt.file.write('dist/gridder.js', banner + fileContent);
 		grunt.file.write('dist/gridder.min.js', banner + minFileContent);
 	});
-
 };

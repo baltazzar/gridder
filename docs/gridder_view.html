@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>gridder_view.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="gridder.html">
+                gridder.js
+              </a>
+            
+              
+              <a class="source" href="gridder_view.html">
+                gridder_view.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>gridder_view.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Define o template da tabela onde o Gridder será renderizado.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> tableTemplate = [
+	<span class="hljs-string">'&lt;div&gt;'</span>,
+	<span class="hljs-string">'	&lt;table class="table table-bordered"&gt;'</span>,
+	<span class="hljs-string">'		&lt;thead&gt;&lt;/thead&gt;'</span>,
+	<span class="hljs-string">'		&lt;tbody&gt;&lt;/tbody&gt;'</span>,
+	<span class="hljs-string">'	&lt;/table&gt;'</span>,
+	<span class="hljs-string">'&lt;/div&gt;'</span>
+].join(<span class="hljs-string">''</span>);
+
+
+module.exports = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(marionette)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Retorna uma Marionette Item View.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>	<span class="hljs-keyword">return</span> marionette.ItemView.extend({
+		template: tableTemplate,
+		colsOptions: <span class="hljs-literal">null</span>,
+		changeValuesOptions: <span class="hljs-literal">null</span>,
+		getColsCallback: <span class="hljs-literal">null</span>,
+		getRowsCallback: <span class="hljs-literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Chama a renderização da view e inicia os observers para os métodos.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		initialize: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
+
+			<span class="hljs-keyword">this</span>.options = options;
+			<span class="hljs-keyword">this</span>.render();
+
+			<span class="hljs-keyword">this</span>.listenTo(<span class="hljs-keyword">this</span>.options.collection, <span class="hljs-string">'all'</span>, _.debounce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>{</span>
+				<span class="hljs-keyword">this</span>.render();
+				<span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.getColsCallback) {
+					<span class="hljs-keyword">this</span>.getCols(<span class="hljs-keyword">this</span>.getColsCallback);
+				}
+				<span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.getRowsCallback) {
+					<span class="hljs-keyword">this</span>.getRows(<span class="hljs-keyword">this</span>.getRowsCallback);
+				}
+				<span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.addColsOptions) {
+					<span class="hljs-keyword">this</span>.addCols(<span class="hljs-keyword">this</span>.addColsOptions);
+				}
+				<span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.changeValuesOptions) {
+					<span class="hljs-keyword">this</span>.changeValues(<span class="hljs-keyword">this</span>.changeValuesOptions);
+				}
+			}), <span class="hljs-number">300</span>);
+		},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Renderiza a view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		onRender: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+			<span class="hljs-keyword">this</span>.setHeaders();
+			<span class="hljs-keyword">this</span>.setCols();
+			<span class="hljs-keyword">this</span>.setCssClasses();
+		},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Método para alterar os valores das colunas da tabela.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		changeValues: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
+			<span class="hljs-keyword">var</span> cols = <span class="hljs-keyword">this</span>.$(<span class="hljs-string">'table &gt; tbody &gt; tr &gt; td'</span>);
+
+			_.each(options, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value, key)</span> {</span>
+				_.each(cols, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(col)</span> {</span>
+					<span class="hljs-keyword">if</span>($(col).html() == key) {
+						$(col).html(value);
+					}
+				});
+			});
+
+			<span class="hljs-keyword">this</span>.changeValuesOptions = options;
+		},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Método para adicionar novas colunas. Antigamente chamado de <strong>setLastCol</strong>, agora aceita que
+as colunas sejam inseridas em qualquer posição da tabela.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		addCols: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
+			<span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>,
+				content = <span class="hljs-literal">null</span>;
+
+			_.each(options, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(option)</span> {</span>
+
+				<span class="hljs-comment">/* hack para atualizar o DOM antes de inserir novos elementos */</span>
+				setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+					<span class="hljs-keyword">var</span> position = option.position,
+						header = option.header ? option.header : <span class="hljs-string">''</span>;
+
+					<span class="hljs-keyword">if</span>(position &amp;&amp; position === <span class="hljs-string">'first'</span>) {
+						position = <span class="hljs-number">0</span>;
+					} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(position &amp;&amp; position === <span class="hljs-string">'last'</span>) {
+						position = that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length;
+					} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(position &gt; that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length) {
+						position = that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length;
+					} <span class="hljs-keyword">else</span> {
+						position = position;
+					}
+
+					<span class="hljs-keyword">try</span> {
+						<span class="hljs-keyword">if</span>(position === <span class="hljs-number">0</span>) {
+							that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th:first-child'</span>).before(<span class="hljs-string">'&lt;th&gt;'</span> + header + <span class="hljs-string">'&lt;/th&gt;'</span>);
+						} <span class="hljs-keyword">else</span> {
+							that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th:nth-child('</span> + position + <span class="hljs-string">')'</span>).after(<span class="hljs-string">'&lt;th&gt;'</span> + header + <span class="hljs-string">'&lt;/th&gt;'</span>);
+						}
+					} <span class="hljs-keyword">catch</span>(err) {
+						position = that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length;
+						that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th:nth-child('</span> + position + <span class="hljs-string">')'</span>).after(<span class="hljs-string">'&lt;th&gt;'</span> + header + <span class="hljs-string">'&lt;/th&gt;'</span>);
+					}
+
+					_.each(that.$(<span class="hljs-string">'table &gt; tbody &gt; tr'</span>), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(row)</span> {</span>
+						<span class="hljs-keyword">var</span> model = that.options.collection.get(row.id);
+
+						content = option.content.replace(<span class="hljs-regexp">/\{\{(\w*)\}\}/gi</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(test, match)</span> {</span>
+							<span class="hljs-keyword">return</span> model.get(match);
+						});
+
+						<span class="hljs-keyword">if</span>(position === <span class="hljs-number">0</span>) {
+							$(row).find(<span class="hljs-string">'td:first-child'</span>).before(<span class="hljs-string">'&lt;td style="width:1px;"&gt;'</span> + content + <span class="hljs-string">'&lt;/td&gt;'</span>);
+						} <span class="hljs-keyword">else</span> {
+							$(row).find(<span class="hljs-string">'td:nth-child('</span> + position + <span class="hljs-string">')'</span>).after(<span class="hljs-string">'&lt;td style="width:1px;"&gt;'</span> + content + <span class="hljs-string">'&lt;/td&gt;'</span>);
+						}
+					});
+				}, option.position);
+			});
+
+			<span class="hljs-keyword">this</span>.addColsOptions = options;
+		},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Método para acessar as colunas da tabela e manipulá-las caso seja necessário.
+Retorna a coluna e o model correspondente.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		getCols: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(callback)</span> {</span>
+			<span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+
+			_.each(<span class="hljs-keyword">this</span>.$(<span class="hljs-string">'table &gt; tbody &gt; tr &gt; td'</span>), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(col)</span> {</span>
+				callback(col, that.options.collection.get($(col).parents(<span class="hljs-string">'tr'</span>).attr(<span class="hljs-string">'id'</span>)));
+			});
+
+			<span class="hljs-keyword">this</span>.getColsCallback = callback;
+		},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Método para acessar as linhas da tabela e manipulá-las caso seja necessário.
+Retorna a linha e o model correspondente.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		getRows: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(callback)</span> {</span>
+			<span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;
+
+			_.each(<span class="hljs-keyword">this</span>.$(<span class="hljs-string">'table &gt; tbody &gt; tr'</span>), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(row)</span> {</span>
+				callback(row, that.options.collection.get(row.id));
+			});
+
+			<span class="hljs-keyword">this</span>.getRowsCallback = callback;
+		},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Define os cabeçalhos da tabela.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		setHeaders: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+			<span class="hljs-keyword">var</span> headers = _.map(<span class="hljs-keyword">this</span>.options.headers, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(h)</span> {</span>
+				<span class="hljs-keyword">return</span> <span class="hljs-string">'&lt;th&gt;'</span> + h.split(<span class="hljs-string">':'</span>)[<span class="hljs-number">1</span>] + <span class="hljs-string">'&lt;/th&gt;'</span>;
+			}).join(<span class="hljs-string">''</span>);
+
+			<span class="hljs-keyword">this</span>.$(<span class="hljs-string">'table &gt; thead'</span>).append(<span class="hljs-string">'&lt;tr/&gt;'</span>).find(<span class="hljs-string">'tr'</span>).append(headers);
+		},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Define e preenche as colunas da tabela com os valores da collection.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		setCols: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+			<span class="hljs-keyword">var</span> keys = _.map(<span class="hljs-keyword">this</span>.options.headers, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(h)</span> {</span> <span class="hljs-keyword">return</span> h.split(<span class="hljs-string">':'</span>)[<span class="hljs-number">0</span>]; }),
+				rows = [],
+				that = <span class="hljs-keyword">this</span>;
+
+			_.each(<span class="hljs-keyword">this</span>.options.collection.models, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span> {</span>
+				<span class="hljs-keyword">var</span> cols = [],
+					attrs = <span class="hljs-literal">null</span>,
+					field = <span class="hljs-literal">null</span>;
+
+				_.each(keys, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key)</span> {</span>
+
+					field = key.split(<span class="hljs-string">'.'</span>);
+
+					<span class="hljs-keyword">if</span>(field.length &gt; <span class="hljs-number">1</span>) {
+						attrs = [];
+
+						_.each(field, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(f)</span> {</span>
+							attrs.push(<span class="hljs-string">'"'</span> + f + <span class="hljs-string">'"'</span>);
+						});
+
+						field = attrs.join(<span class="hljs-string">']['</span>);
+					} <span class="hljs-keyword">else</span> {
+						field = <span class="hljs-string">'"'</span> + key + <span class="hljs-string">'"'</span>;
+					}
+
+					<span class="hljs-keyword">try</span> {
+						field =  <span class="hljs-built_in">eval</span>(<span class="hljs-string">'model.attributes['</span> + field + <span class="hljs-string">']'</span>);
+
+						<span class="hljs-keyword">if</span>(that.options.sanitize === <span class="hljs-literal">false</span>) {
+							field = field;
+						} <span class="hljs-keyword">else</span> {
+							field = field === <span class="hljs-literal">null</span> || field === <span class="hljs-literal">undefined</span> ? <span class="hljs-string">''</span> : field;
+						}
+
+						key = key.replace(<span class="hljs-regexp">/\./g</span>, <span class="hljs-string">'-'</span>);
+
+						cols.push(<span class="hljs-string">'&lt;td class="col-'</span> + key + <span class="hljs-string">'"&gt;'</span> + field + <span class="hljs-string">'&lt;/td&gt;'</span>);
+					} <span class="hljs-keyword">catch</span> (err) {
+						cols.push(<span class="hljs-string">'&lt;td&gt;&lt;/td&gt;'</span>);
+					}
+				});
+
+				rows.push(<span class="hljs-string">'&lt;tr id="'</span> + model[<span class="hljs-string">'id'</span>] + <span class="hljs-string">'"&gt;'</span> + cols.join(<span class="hljs-string">''</span>) + <span class="hljs-string">'&lt;/tr&gt;'</span>);
+			});
+
+			<span class="hljs-keyword">this</span>.$(<span class="hljs-string">'table &gt; tbody'</span>).append(rows.join(<span class="hljs-string">''</span>));
+		},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Define classes CSS opcionais para serem aplicadas na tabela.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>		setCssClasses: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+			<span class="hljs-keyword">this</span>.$(<span class="hljs-string">'table'</span>).addClass(<span class="hljs-keyword">this</span>.options.cssClasses.join(<span class="hljs-string">' '</span>));
+		}
+	});
+};</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

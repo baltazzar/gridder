@@ -14,6 +14,7 @@ module.exports = function(marionette) {
 	};
 };
 },{"./gridder_view":2}],2:[function(_dereq_,module,exports){
+// Define o template da tabela onde o Gridder será renderizado.
 var tableTemplate = [
 	'<div>',
 	'	<table class="table table-bordered">',
@@ -26,6 +27,7 @@ var tableTemplate = [
 
 module.exports = function(marionette) {
 
+	// Retorna uma Marionette Item View.
 	return marionette.ItemView.extend({
 		template: tableTemplate,
 		colsOptions: null,
@@ -33,6 +35,7 @@ module.exports = function(marionette) {
 		getColsCallback: null,
 		getRowsCallback: null,
 
+		// Chama a renderização da view e inicia os observers para os métodos.
 		initialize: function(options) {
 
 			this.options = options;
@@ -55,12 +58,14 @@ module.exports = function(marionette) {
 			}), 300);
 		},
 
+		// Renderiza a view.
 		onRender: function() {
 			this.setHeaders();
 			this.setCols();
 			this.setCssClasses();
 		},
 
+		// Método para alterar os valores das colunas da tabela.
 		changeValues: function(options) {
 			var cols = this.$('table > tbody > tr > td');
 
@@ -75,19 +80,39 @@ module.exports = function(marionette) {
 			this.changeValuesOptions = options;
 		},
 
+		// Método para adicionar novas colunas. Antigamente chamado de **setLastCol**, agora aceita que
+		// as colunas sejam inseridas em qualquer posição da tabela.
 		addCols: function(options) {
 			var that = this,
 				content = null;
 
 			_.each(options, function(option) {
 
-				// hack para atualizar o DOM antes de inserir novos elementos
+				/* hack para atualizar o DOM antes de inserir novos elementos */
 				setTimeout(function() {
-					option.position = option.position ? option.position : that.$('table > thead > tr > th').length;
-					option.header = option.header ? option.header : '';
+					var position = option.position,
+						header = option.header ? option.header : '';
 
-					that.$('table > thead > tr > th:nth-child(' + option.position + ')')
-						.after('<th>' + option.header + '</th>');
+					if(position && position === 'first') {
+						position = 0;
+					} else if(position && position === 'last') {
+						position = that.$('table > thead > tr > th').length;
+					} else if(position > that.$('table > thead > tr > th').length) {
+						position = that.$('table > thead > tr > th').length;
+					} else {
+						position = position;
+					}
+
+					try {
+						if(position === 0) {
+							that.$('table > thead > tr > th:first-child').before('<th>' + header + '</th>');
+						} else {
+							that.$('table > thead > tr > th:nth-child(' + position + ')').after('<th>' + header + '</th>');
+						}
+					} catch(err) {
+						position = that.$('table > thead > tr > th').length;
+						that.$('table > thead > tr > th:nth-child(' + position + ')').after('<th>' + header + '</th>');
+					}
 
 					_.each(that.$('table > tbody > tr'), function(row) {
 						var model = that.options.collection.get(row.id);
@@ -96,8 +121,11 @@ module.exports = function(marionette) {
 							return model.get(match);
 						});
 
-						$(row).find('td:nth-child(' + option.position + ')')
-							.after('<td style="width:1px;">' + content + '</td>');
+						if(position === 0) {
+							$(row).find('td:first-child').before('<td style="width:1px;">' + content + '</td>');
+						} else {
+							$(row).find('td:nth-child(' + position + ')').after('<td style="width:1px;">' + content + '</td>');
+						}
 					});
 				}, option.position);
 			});
@@ -105,6 +133,8 @@ module.exports = function(marionette) {
 			this.addColsOptions = options;
 		},
 
+		// Método para acessar as colunas da tabela e manipulá-las caso seja necessário.
+		// Retorna a coluna e o model correspondente.
 		getCols: function(callback) {
 			var that = this;
 
@@ -115,6 +145,8 @@ module.exports = function(marionette) {
 			this.getColsCallback = callback;
 		},
 
+		// Método para acessar as linhas da tabela e manipulá-las caso seja necessário.
+		// Retorna a linha e o model correspondente.
 		getRows: function(callback) {
 			var that = this;
 
@@ -125,6 +157,7 @@ module.exports = function(marionette) {
 			this.getRowsCallback = callback;
 		},
 
+		// Define os cabeçalhos da tabela.
 		setHeaders: function() {
 			var headers = _.map(this.options.headers, function(h) {
 				return '<th>' + h.split(':')[1] + '</th>';
@@ -133,6 +166,7 @@ module.exports = function(marionette) {
 			this.$('table > thead').append('<tr/>').find('tr').append(headers);
 		},
 
+		// Define e preenche as colunas da tabela com os valores da collection.
 		setCols: function() {
 			var keys = _.map(this.options.headers, function(h) { return h.split(':')[0]; }),
 				rows = [],
@@ -182,6 +216,7 @@ module.exports = function(marionette) {
 			this.$('table > tbody').append(rows.join(''));
 		},
 
+		// Define classes CSS opcionais para serem aplicadas na tabela.
 		setCssClasses: function() {
 			this.$('table').addClass(this.options.cssClasses.join(' '));
 		}

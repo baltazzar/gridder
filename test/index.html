@@ -19,7 +19,7 @@
 	<body>
 		<div class="container">
 			<h2 class="text-info">Gridder</h2>
-			<div id="gridPessoas"></div>
+			<div id="gridPatos"></div>
 		</div>
 
 
@@ -33,54 +33,39 @@
 
 			var Gridder = baltazzar.gridder(Marionette);
 
-			var Pessoas = new Backbone.Collection([
-				{ id: 1, nome: 'Victor Bastos', idade: 29, linguagem: {nome: 'Javascript', tipada: {nome: 'Não Tipada'}} },
-				{ id: 2, nome: 'Antonio Furlaneto', idade: null, linguagem: {nome: 'C#', tipada: {nome: 'Fortemente'}} },
-				{ id: 3, nome: 'Michel Ariede', idade: null },
-				{ id: 4, nome: 'Raphael Silva', idade: null },
-				{ id: 5, nome: 'Willian Finamore', idade: null },
-				{ id: 6, nome: 'Renato Mestre', idade: null },
-				{ id: 7, nome: 'Thiago Ribeiro', idade: null }
+			var Patos = new Backbone.Collection([
+				{ id: 1, nome: 'Hugo', apelido: 'Huguinho', hobby: { nome: 'Jogar Bola'} },
+				{ id: 2, nome: 'José', apelido: 'Zezinho', hobby: { nome: 'Nadar' } },
+				{ id: 3, nome: 'Luiz', apelido: 'Luizinho', hobby: { nome: 'Ler' } }
 			]);
 
-			setTimeout(function() {
-				Pessoas.reset();
-			}, 5000);
-
-			setTimeout(function() {
-				Pessoas.add([
-					{ id: 5, nome: 'Willian Finamore', idade: null },
-					{ id: 6, nome: 'Renato Mestre', idade: null },
-					{ id: 7, nome: 'Thiago Ribeiro', idade: null }
-				])
-			}, 10000);
-
-			var gridPessoas = new Gridder({
-				el: '#gridPessoas',
+			var gridPatos = new Gridder({
+				el: '#gridPatos',
 				cssClasses: ['table-hover', 'table-condensed', 'table-fixed'],
-				collection: Pessoas,
-				headers: ['nome:Nome', 'idade:Idade', 'linguagem.nome:Linguagem', 'linguagem.tipada.nome:Tipada']
+				collection: Patos,
+				headers: ['nome:Nome', 'apelido:Apelido', 'hobby.nome:Hobby']
 			});
 
-			gridPessoas.changeValues({
-				'Willian Finamore': '<span class="text-danger">Willian Finamore</span>',
-				'29': '<strong class="text-info">29</strong>'
+			gridPatos.changeValues({
+				'Huguinho': '<span class="badge">Huguinho</span>',
+				'Zezinho': '<span class="badge">Zezinho</span>',
+				'Luizinho': '<span class="badge">Luizinho</span>'
 			});
 
-			gridPessoas.addCols([
+			gridPatos.addCols([
 				{
-					position: 2,
-					header: 'HAHA',
-					content: '<button class="btn btn-xs btn-teste" id="{{id}}">Pessoa</button>'
+					position: 'first',
+					header: 'Ação',
+					content: '<button class="btn btn-xs btn-primary btn-teste" id="{{id}}">Detalhes</button>'
 				}
 			]);
 
-			gridPessoas.getCols(function(col, model) {
+			gridPatos.getCols(function(col, model) {
 				// console.log(col);
 				// console.log(model);
 			});
 
-			gridPessoas.getRows(function(row, model) {
+			gridPatos.getRows(function(row, model) {
 				// console.log(row);
 				// console.log(model);
 			});
