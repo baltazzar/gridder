@@ -1,5 +1,3 @@
-// Gridder View
-
 var tableTemplate = [
 	'<div>',
 	'	<table class="table table-bordered">',
@@ -14,6 +12,10 @@ module.exports = function(marionette) {
 
 	return marionette.ItemView.extend({
 		template: tableTemplate,
+		colsOptions: null,
+		changeValuesOptions: null,
+		getColsCallback: null,
+		getRowsCallback: null,
 
 		initialize: function(options) {
 

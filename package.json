@@ -1,21 +1,22 @@
 {
-  "name": "gridder",
-  "version": "0.0.1",
-  "description": "Módulo para exibição de registros de maneira tabular.",
-  "private": true,
-  "devDependencies": {
-    "grunt"                 : "*",
-    "grunt-browserify"      : "~2.0.1",
-    "grunt-contrib-jshint"  : "*",
-    "grunt-contrib-watch"   : "*",
-    "grunt-docco"           : "*",
-    "jit-grunt"             : "*",
-    "grunt-contrib-connect" : "~0.7.1"
-  },
-  "volo": {
-    "!url": "https://raw.github.com/baltazzar/{name}/{version}/dist/{name}.min.js"
-  },
-  "scripts": {
-    "preinstall": "npm install -g grunt-cli"
-  }
+	"name": "gridder",
+	"version": "0.2.0",
+	"description": "Módulo para exibição de registros de maneira tabular.",
+	"private": true,
+	"devDependencies": {
+		"grunt"                 : "*",
+		"grunt-browserify"      : "~2.0.1",
+		"grunt-contrib-jshint"  : "*",
+		"grunt-contrib-watch"   : "*",
+		"grunt-docco"           : "*",
+		"jit-grunt"             : "*",
+		"grunt-contrib-connect" : "~0.7.1",
+		"grunt-contrib-uglify"  : "~0.4.0"
+	},
+	"volo": {
+		"!url": "https://raw.github.com/baltazzar/{name}/{version}/dist/{name}.min.js"
+	},
+	"scripts": {
+		"preinstall": "npm install -g grunt-cli"
+	}
 }
