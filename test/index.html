@@ -3,16 +3,17 @@
 		<meta charset="UTF-8">
 		<title>Component Test</title>
 		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-		<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="../src/libs/jquery.js"></script>
+		<script src="../src/libs/underscore.js"></script>
+		<script src="../src/libs/backbone.js"></script>
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
-		<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.marionette/1.6.4-bundled/backbone.marionette.min.js"></script>
-		<script src="../dist/gridder.js"></script>
-
 		<style>
+			body {
+				background: #f5f5f5;
+			}
 			table {
 				font-size: 12px;
+				background: #ffffff;
 			}
 		</style>
 	</head>
@@ -23,6 +24,7 @@
 		</div>
 
 
+		<script src="../dist/gridder.js"></script>
 		<script type="text/javascript">
 
 			$(document).on('click', '.btn-teste', function(ev) {
@@ -31,13 +33,21 @@
 				alert(ev.currentTarget.id + ' clicked!');
 			})
 
-			var Gridder = baltazzar.gridder(Marionette);
+			var Gridder = baltazzar.gridder();
 
 			var Patos = new Backbone.Collection([
 				{ id: 1, nome: 'Hugo', apelido: 'Huguinho', hobby: { nome: 'Jogar Bola'} },
 				{ id: 2, nome: 'José', apelido: 'Zezinho', hobby: { nome: 'Nadar' } },
 				{ id: 3, nome: 'Luiz', apelido: 'Luizinho', hobby: { nome: 'Ler' } }
 			]);
+
+			setTimeout(function() {
+				Patos.reset();
+			}, 3000);
+
+			setTimeout(function() {
+				Patos.add({id: 4, nome: 'Pato Donald', apelido: 'Donald'});
+			}, 6000);
 
 			var gridPatos = new Gridder({
 				el: '#gridPatos',
@@ -49,13 +59,19 @@
 			gridPatos.changeValues({
 				'Huguinho': '<span class="badge">Huguinho</span>',
 				'Zezinho': '<span class="badge">Zezinho</span>',
-				'Luizinho': '<span class="badge">Luizinho</span>'
+				'Luizinho': '<span class="badge">Luizinho</span>',
+				'Donald': '<span class="badge">Donald</span>'
 			});
 
 			gridPatos.addCols([
 				{
-					position: 'first',
-					header: 'Ação',
+					position: 'last',
+					header: '',
+					content: '<button class="btn btn-xs btn-danger btn-teste" id="{{id}}">Detalhes</button>'
+				},
+				{
+					position: 'last',
+					header: '',
 					content: '<button class="btn btn-xs btn-primary btn-teste" id="{{id}}">Detalhes</button>'
 				}
 			]);

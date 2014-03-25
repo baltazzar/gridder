@@ -5,16 +5,13 @@
  * Autor: BaltazZar Team
  */
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),(f.baltazzar||(f.baltazzar={})).gridder=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-module.exports = function(marionette) {
+var $ = _dereq_('jquery'),
+	_ = _dereq_('underscore'),
+	Backbone = _dereq_('backbone');
 
-	var GridderView = _dereq_('./gridder_view')(marionette);
+Backbone.$ = $;
 
-	return function(options) {
-		return new GridderView(options);
-	};
-};
-},{"./gridder_view":2}],2:[function(_dereq_,module,exports){
-// Define o template da tabela onde o Gridder será renderizado.
+// Define o template da tabela do Gridder.
 var tableTemplate = [
 	'<div>',
 	'	<table class="table table-bordered">',
@@ -24,11 +21,10 @@ var tableTemplate = [
 	'</div>'
 ].join('');
 
-
-module.exports = function(marionette) {
+module.exports = function() {
 
 	// Retorna uma Marionette Item View.
-	return marionette.ItemView.extend({
+	return Backbone.View.extend({
 		template: tableTemplate,
 		colsOptions: null,
 		changeValuesOptions: null,
@@ -59,10 +55,13 @@ module.exports = function(marionette) {
 		},
 
 		// Renderiza a view.
-		onRender: function() {
+		render: function() {
+			this.$el.html(this.template);
 			this.setHeaders();
 			this.setCols();
-			this.setCssClasses();
+			if(this.options.cssClasses) {
+				this.setCssClasses();
+			}
 		},
 
 		// Método para alterar os valores das colunas da tabela.
@@ -222,6 +221,6 @@ module.exports = function(marionette) {
 		}
 	});
 };
-},{}]},{},[1])
+},{"backbone":"Wgp6g1","jquery":"fQA0E3","underscore":"4DhQe5"}]},{},[1])
 (1)
 });;

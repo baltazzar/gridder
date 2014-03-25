@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 		},
 		docco: {
 			debug: {
-				src: ['src/**/*.js'],
+				src: ['src/**/*.js', '!src/libs/**/*.js'],
 				options: {
 					output: 'docs/'
 				}
@@ -40,7 +40,7 @@ module.exports = function (grunt) {
 				'-W041': true,
 				'-W069': true
 			},
-			files: ['src/**/*.js', '!src/templates.js']
+			files: ['src/**/*.js', '!src/libs/**/*.js']
 		},
 		watch: {
 			files: {
@@ -50,16 +50,27 @@ module.exports = function (grunt) {
 				}
 			},
 			dist: {
-				files: ['src/**/*.js'],
+				files: ['src/**/*.js', '!src/libs/**/*.js'],
 				tasks: ['browserify']
 			}
 		},
 		browserify: {
+			dev: {
+				src: ['src/<%= pkg.name %>.js'],
+				dest: 'dist/<%= pkg.name %>.js',
+				options: {
+					alias: ['src/libs/jquery.js:jquery', 'src/libs/underscore.js:underscore', 'src/libs/backbone.js:backbone'],
+					bundleOptions: {
+						standalone: 'baltazzar.<%= pkg.name %>'
+					}
+				}
+			},
 			dist: {
 				src: ['src/<%= pkg.name %>.js'],
 				dest: 'dist/<%= pkg.name %>.js',
 				options: {
-					debug: true,
+					alias: ['src/libs/jquery.js:jquery', 'src/libs/underscore.js:underscore', 'src/libs/backbone.js:backbone'],
+					exclude: ['src/libs/jquery.js', 'src/libs/underscore.js', 'src/libs/backbone.js'],
 					bundleOptions: {
 						standalone: 'baltazzar.<%= pkg.name %>'
 					}
@@ -71,9 +82,9 @@ module.exports = function (grunt) {
 		}
 	});
 
-	grunt.registerTask('dev', ['browserify', 'connect', 'watch']);
+	grunt.registerTask('dev', ['browserify:dev', 'connect', 'watch']);
 	grunt.registerTask('default', ['dev']);
-	grunt.registerTask('build', ['docco', 'jshint', 'browserify', 'uglify', 'banner']);
+	grunt.registerTask('build', ['docco', 'jshint', 'browserify:dist', 'uglify', 'banner']);
 	grunt.registerTask('banner', function() {
 		var banner = grunt.config.get('banner'),
 			fileContent = grunt.file.read('dist/gridder.js'),
