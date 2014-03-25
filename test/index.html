@@ -23,31 +23,21 @@
 			<div id="gridPatos"></div>
 		</div>
 
-
 		<script src="../dist/gridder.js"></script>
 		<script type="text/javascript">
-
 			$(document).on('click', '.btn-teste', function(ev) {
 				ev.preventDefault();
 
 				alert(ev.currentTarget.id + ' clicked!');
 			})
 
-			var Gridder = baltazzar.gridder();
+			var Gridder = baltazzar.gridder;
 
 			var Patos = new Backbone.Collection([
 				{ id: 1, nome: 'Hugo', apelido: 'Huguinho', hobby: { nome: 'Jogar Bola'} },
 				{ id: 2, nome: 'José', apelido: 'Zezinho', hobby: { nome: 'Nadar' } },
 				{ id: 3, nome: 'Luiz', apelido: 'Luizinho', hobby: { nome: 'Ler' } }
 			]);
-
-			setTimeout(function() {
-				Patos.reset();
-			}, 3000);
-
-			setTimeout(function() {
-				Patos.add({id: 4, nome: 'Pato Donald', apelido: 'Donald'});
-			}, 6000);
 
 			var gridPatos = new Gridder({
 				el: '#gridPatos',
@@ -76,15 +66,16 @@
 				}
 			]);
 
-			gridPatos.getCols(function(col, model) {
-				// console.log(col);
-				// console.log(model);
-			});
+			setInterval(function() {
+				var oldPatos = Patos.toJSON();
 
-			gridPatos.getRows(function(row, model) {
-				// console.log(row);
-				// console.log(model);
-			});
+				Patos.reset();
+
+				setTimeout(function() {
+					Patos.reset(oldPatos);
+				}, 5000);
+
+			}, 5000);
 		</script>
 	</body>
 </html>
