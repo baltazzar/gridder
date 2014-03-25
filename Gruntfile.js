@@ -69,8 +69,7 @@ module.exports = function (grunt) {
 				src: ['src/<%= pkg.name %>.js'],
 				dest: 'dist/<%= pkg.name %>.js',
 				options: {
-					alias: ['src/libs/jquery.js:jquery', 'src/libs/underscore.js:underscore', 'src/libs/backbone.js:backbone'],
-					exclude: ['src/libs/jquery.js', 'src/libs/underscore.js', 'src/libs/backbone.js'],
+					external: ['jquery', 'underscore', 'backbone'],
 					bundleOptions: {
 						standalone: 'baltazzar.<%= pkg.name %>'
 					}
