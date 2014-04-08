@@ -1,6 +1,6 @@
 /**
  * Baltazzar Gridder %>
- * Versão: 0.2.0
+ * Versão: 0.2.1
  * Módulo para exibição de registros de maneira tabular.
  * Autor: BaltazZar Team
  */
@@ -33,6 +33,11 @@ module.exports = Backbone.View.extend({
 	initialize: function(options) {
 
 		this.options = options;
+
+		if(!this.options.emptyCollectionMessage) {
+			this.options.emptyCollectionMessage = 'Sem registros para exibição!';
+		}
+
 		this.render();
 
 		this.listenTo(this.options.collection, 'all', _.debounce(function(){
@@ -169,48 +174,53 @@ module.exports = Backbone.View.extend({
 			rows = [],
 			that = this;
 
-		_.each(this.options.collection.models, function(model) {
-			var cols = [],
-				attrs = null,
-				field = null;
+		if(this.options.collection.length > 0) {
+			_.each(this.options.collection.models, function(model) {
+				var cols = [],
+					attrs = null,
+					field = null;
 
-			_.each(keys, function(key) {
+				_.each(keys, function(key) {
 
-				field = key.split('.');
+					field = key.split('.');
 
-				if(field.length > 1) {
-					attrs = [];
+					if(field.length > 1) {
+						attrs = [];
 
-					_.each(field, function(f) {
-						attrs.push('"' + f + '"');
-					});
+						_.each(field, function(f) {
+							attrs.push('"' + f + '"');
+						});
 
-					field = attrs.join('][');
-				} else {
-					field = '"' + key + '"';
-				}
-
-				try {
-					field =  eval('model.attributes[' + field + ']');
-
-					if(that.options.sanitize === false) {
-						field = field;
+						field = attrs.join('][');
 					} else {
-						field = field === null || field === undefined ? '' : field;
+						field = '"' + key + '"';
 					}
 
-					key = key.replace(/\./g, '-');
+					try {
+						field =  eval('model.attributes[' + field + ']');
 
-					cols.push('<td class="col-' + key + '">' + field + '</td>');
-				} catch (err) {
-					cols.push('<td></td>');
-				}
+						if(that.options.sanitize === false) {
+							field = field;
+						} else {
+							field = field === null || field === undefined ? '' : field;
+						}
+
+						key = key.replace(/\./g, '-');
+
+						cols.push('<td class="col-' + key + '">' + field + '</td>');
+					} catch (err) {
+						cols.push('<td></td>');
+					}
+				});
+
+				rows.push('<tr id="' + model['id'] + '">' + cols.join('') + '</tr>');
 			});
 
-			rows.push('<tr id="' + model['id'] + '">' + cols.join('') + '</tr>');
-		});
+			this.$('table > tbody').append(rows.join(''));
 
-		this.$('table > tbody').append(rows.join(''));
+		} else {
+			this.$('table tbody').html('<tr class="warning"><td class="text-center" colspan="' + keys.length + '"><strong class="text-danger">' + this.options.emptyCollectionMessage + '</strong></td></tr>');
+		}
 	},
 
 	// Define classes CSS opcionais para serem aplicadas na tabela.

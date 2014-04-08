@@ -1,6 +1,6 @@
 {
 	"name": "gridder",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "Módulo para exibição de registros de maneira tabular.",
 	"private": true,
 	"devDependencies": {

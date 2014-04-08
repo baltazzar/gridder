@@ -94,6 +94,11 @@ Backbone.$ = $;</pre></div></div>
             <div class="content"><div class='highlight'><pre>	initialize: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(options)</span> {</span>
 
 		<span class="hljs-keyword">this</span>.options = options;
+
+		<span class="hljs-keyword">if</span>(!<span class="hljs-keyword">this</span>.options.emptyCollectionMessage) {
+			<span class="hljs-keyword">this</span>.options.emptyCollectionMessage = <span class="hljs-string">'Sem registros para exibição!'</span>;
+		}
+
 		<span class="hljs-keyword">this</span>.render();
 
 		<span class="hljs-keyword">this</span>.listenTo(<span class="hljs-keyword">this</span>.options.collection, <span class="hljs-string">'all'</span>, _.debounce(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span>{</span>
@@ -314,48 +319,53 @@ Retorna a linha e o model correspondente.</p>
 			rows = [],
 			that = <span class="hljs-keyword">this</span>;
 
-		_.each(<span class="hljs-keyword">this</span>.options.collection.models, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span> {</span>
-			<span class="hljs-keyword">var</span> cols = [],
-				attrs = <span class="hljs-literal">null</span>,
-				field = <span class="hljs-literal">null</span>;
+		<span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.options.collection.length &gt; <span class="hljs-number">0</span>) {
+			_.each(<span class="hljs-keyword">this</span>.options.collection.models, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(model)</span> {</span>
+				<span class="hljs-keyword">var</span> cols = [],
+					attrs = <span class="hljs-literal">null</span>,
+					field = <span class="hljs-literal">null</span>;
 
-			_.each(keys, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key)</span> {</span>
+				_.each(keys, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(key)</span> {</span>
 
-				field = key.split(<span class="hljs-string">'.'</span>);
+					field = key.split(<span class="hljs-string">'.'</span>);
 
-				<span class="hljs-keyword">if</span>(field.length &gt; <span class="hljs-number">1</span>) {
-					attrs = [];
+					<span class="hljs-keyword">if</span>(field.length &gt; <span class="hljs-number">1</span>) {
+						attrs = [];
 
-					_.each(field, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(f)</span> {</span>
-						attrs.push(<span class="hljs-string">'"'</span> + f + <span class="hljs-string">'"'</span>);
-					});
+						_.each(field, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(f)</span> {</span>
+							attrs.push(<span class="hljs-string">'"'</span> + f + <span class="hljs-string">'"'</span>);
+						});
 
-					field = attrs.join(<span class="hljs-string">']['</span>);
-				} <span class="hljs-keyword">else</span> {
-					field = <span class="hljs-string">'"'</span> + key + <span class="hljs-string">'"'</span>;
-				}
-
-				<span class="hljs-keyword">try</span> {
-					field =  <span class="hljs-built_in">eval</span>(<span class="hljs-string">'model.attributes['</span> + field + <span class="hljs-string">']'</span>);
-
-					<span class="hljs-keyword">if</span>(that.options.sanitize === <span class="hljs-literal">false</span>) {
-						field = field;
+						field = attrs.join(<span class="hljs-string">']['</span>);
 					} <span class="hljs-keyword">else</span> {
-						field = field === <span class="hljs-literal">null</span> || field === <span class="hljs-literal">undefined</span> ? <span class="hljs-string">''</span> : field;
+						field = <span class="hljs-string">'"'</span> + key + <span class="hljs-string">'"'</span>;
 					}
 
-					key = key.replace(<span class="hljs-regexp">/\./g</span>, <span class="hljs-string">'-'</span>);
+					<span class="hljs-keyword">try</span> {
+						field =  <span class="hljs-built_in">eval</span>(<span class="hljs-string">'model.attributes['</span> + field + <span class="hljs-string">']'</span>);
 
-					cols.push(<span class="hljs-string">'&lt;td class="col-'</span> + key + <span class="hljs-string">'"&gt;'</span> + field + <span class="hljs-string">'&lt;/td&gt;'</span>);
-				} <span class="hljs-keyword">catch</span> (err) {
-					cols.push(<span class="hljs-string">'&lt;td&gt;&lt;/td&gt;'</span>);
-				}
+						<span class="hljs-keyword">if</span>(that.options.sanitize === <span class="hljs-literal">false</span>) {
+							field = field;
+						} <span class="hljs-keyword">else</span> {
+							field = field === <span class="hljs-literal">null</span> || field === <span class="hljs-literal">undefined</span> ? <span class="hljs-string">''</span> : field;
+						}
+
+						key = key.replace(<span class="hljs-regexp">/\./g</span>, <span class="hljs-string">'-'</span>);
+
+						cols.push(<span class="hljs-string">'&lt;td class="col-'</span> + key + <span class="hljs-string">'"&gt;'</span> + field + <span class="hljs-string">'&lt;/td&gt;'</span>);
+					} <span class="hljs-keyword">catch</span> (err) {
+						cols.push(<span class="hljs-string">'&lt;td&gt;&lt;/td&gt;'</span>);
+					}
+				});
+
+				rows.push(<span class="hljs-string">'&lt;tr id="'</span> + model[<span class="hljs-string">'id'</span>] + <span class="hljs-string">'"&gt;'</span> + cols.join(<span class="hljs-string">''</span>) + <span class="hljs-string">'&lt;/tr&gt;'</span>);
 			});
 
-			rows.push(<span class="hljs-string">'&lt;tr id="'</span> + model[<span class="hljs-string">'id'</span>] + <span class="hljs-string">'"&gt;'</span> + cols.join(<span class="hljs-string">''</span>) + <span class="hljs-string">'&lt;/tr&gt;'</span>);
-		});
+			<span class="hljs-keyword">this</span>.$(<span class="hljs-string">'table &gt; tbody'</span>).append(rows.join(<span class="hljs-string">''</span>));
 
-		<span class="hljs-keyword">this</span>.$(<span class="hljs-string">'table &gt; tbody'</span>).append(rows.join(<span class="hljs-string">''</span>));
+		} <span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">this</span>.$(<span class="hljs-string">'table tbody'</span>).html(<span class="hljs-string">'&lt;tr class="warning"&gt;&lt;td class="text-center" colspan="'</span> + keys.length + <span class="hljs-string">'"&gt;&lt;strong class="text-danger"&gt;'</span> + <span class="hljs-keyword">this</span>.options.emptyCollectionMessage + <span class="hljs-string">'&lt;/strong&gt;&lt;/td&gt;&lt;/tr&gt;'</span>);
+		}
 	},</pre></div></div>
             
         </li>
