@@ -185,49 +185,51 @@ as colunas sejam inseridas em qualquer posição da tabela.</p>
 		<span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>,
 			content = <span class="hljs-literal">null</span>;
 
-		_.each(options, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(option)</span> {</span>
+		<span class="hljs-keyword">if</span>(<span class="hljs-keyword">this</span>.options.collection.length &gt; <span class="hljs-number">0</span>) {
+			_.each(options, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(option)</span> {</span>
 
-			<span class="hljs-comment">/* hack para atualizar o DOM antes de inserir novos elementos */</span>
-			setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-				<span class="hljs-keyword">var</span> position = option.position,
-					header = option.header ? option.header : <span class="hljs-string">''</span>;
+				<span class="hljs-comment">/* hack para atualizar o DOM antes de inserir novos elementos */</span>
+				setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+					<span class="hljs-keyword">var</span> position = option.position,
+						header = option.header ? option.header : <span class="hljs-string">''</span>;
 
-				<span class="hljs-keyword">if</span>(position &amp;&amp; position === <span class="hljs-string">'first'</span>) {
-					position = <span class="hljs-number">0</span>;
-				} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(position &amp;&amp; position === <span class="hljs-string">'last'</span>) {
-					position = that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length;
-				} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(position &gt; that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length) {
-					position = that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length;
-				} <span class="hljs-keyword">else</span> {
-					position = position;
-				}
-
-				<span class="hljs-keyword">try</span> {
-					<span class="hljs-keyword">if</span>(position === <span class="hljs-number">0</span>) {
-						that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th:first-child'</span>).before(<span class="hljs-string">'&lt;th&gt;'</span> + header + <span class="hljs-string">'&lt;/th&gt;'</span>);
+					<span class="hljs-keyword">if</span>(position &amp;&amp; position === <span class="hljs-string">'first'</span>) {
+						position = <span class="hljs-number">0</span>;
+					} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(position &amp;&amp; position === <span class="hljs-string">'last'</span>) {
+						position = that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length;
+					} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(position &gt; that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length) {
+						position = that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length;
 					} <span class="hljs-keyword">else</span> {
+						position = position;
+					}
+
+					<span class="hljs-keyword">try</span> {
+						<span class="hljs-keyword">if</span>(position === <span class="hljs-number">0</span>) {
+							that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th:first-child'</span>).before(<span class="hljs-string">'&lt;th&gt;'</span> + header + <span class="hljs-string">'&lt;/th&gt;'</span>);
+						} <span class="hljs-keyword">else</span> {
+							that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th:nth-child('</span> + position + <span class="hljs-string">')'</span>).after(<span class="hljs-string">'&lt;th&gt;'</span> + header + <span class="hljs-string">'&lt;/th&gt;'</span>);
+						}
+					} <span class="hljs-keyword">catch</span>(err) {
+						position = that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length;
 						that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th:nth-child('</span> + position + <span class="hljs-string">')'</span>).after(<span class="hljs-string">'&lt;th&gt;'</span> + header + <span class="hljs-string">'&lt;/th&gt;'</span>);
 					}
-				} <span class="hljs-keyword">catch</span>(err) {
-					position = that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th'</span>).length;
-					that.$(<span class="hljs-string">'table &gt; thead &gt; tr &gt; th:nth-child('</span> + position + <span class="hljs-string">')'</span>).after(<span class="hljs-string">'&lt;th&gt;'</span> + header + <span class="hljs-string">'&lt;/th&gt;'</span>);
-				}
 
-				_.each(that.$(<span class="hljs-string">'table &gt; tbody &gt; tr'</span>), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(row)</span> {</span>
-					<span class="hljs-keyword">var</span> model = that.options.collection.get(row.id);
+					_.each(that.$(<span class="hljs-string">'table &gt; tbody &gt; tr'</span>), <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(row)</span> {</span>
+						<span class="hljs-keyword">var</span> model = that.options.collection.get(row.id);
 
-					content = option.content.replace(<span class="hljs-regexp">/\{\{(\w*)\}\}/gi</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(test, match)</span> {</span>
-						<span class="hljs-keyword">return</span> model.get(match);
+						content = option.content.replace(<span class="hljs-regexp">/\{\{(\w*)\}\}/gi</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(test, match)</span> {</span>
+							<span class="hljs-keyword">return</span> model.get(match);
+						});
+
+						<span class="hljs-keyword">if</span>(position === <span class="hljs-number">0</span>) {
+							$(row).find(<span class="hljs-string">'td:first-child'</span>).before(<span class="hljs-string">'&lt;td style="width:1px;"&gt;'</span> + content + <span class="hljs-string">'&lt;/td&gt;'</span>);
+						} <span class="hljs-keyword">else</span> {
+							$(row).find(<span class="hljs-string">'td:nth-child('</span> + position + <span class="hljs-string">')'</span>).after(<span class="hljs-string">'&lt;td style="width:1px;"&gt;'</span> + content + <span class="hljs-string">'&lt;/td&gt;'</span>);
+						}
 					});
-
-					<span class="hljs-keyword">if</span>(position === <span class="hljs-number">0</span>) {
-						$(row).find(<span class="hljs-string">'td:first-child'</span>).before(<span class="hljs-string">'&lt;td style="width:1px;"&gt;'</span> + content + <span class="hljs-string">'&lt;/td&gt;'</span>);
-					} <span class="hljs-keyword">else</span> {
-						$(row).find(<span class="hljs-string">'td:nth-child('</span> + position + <span class="hljs-string">')'</span>).after(<span class="hljs-string">'&lt;td style="width:1px;"&gt;'</span> + content + <span class="hljs-string">'&lt;/td&gt;'</span>);
-					}
-				});
-			}, option.position);
-		});
+				}, option.position);
+			});
+		}
 
 		<span class="hljs-keyword">this</span>.addColsOptions = options;
 	},</pre></div></div>

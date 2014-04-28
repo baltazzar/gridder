@@ -43,21 +43,21 @@ module.exports = function (grunt) {
 			files: ['src/**/*.js', '!src/libs/**/*.js']
 		},
 		watch: {
-			files: {
-				files: ['test/**/*', 'dist/**/*'],
+			test: {
+				files: ['test/**/*'],
 				options: {
 					livereload: '<%= livereloadPort %>'
 				}
 			},
-			dist: {
+			src: {
 				files: ['src/**/*.js', '!src/libs/**/*.js'],
-				tasks: ['browserify']
+				tasks: ['browserify:dev']
 			}
 		},
 		browserify: {
 			dev: {
 				src: ['src/<%= pkg.name %>.js'],
-				dest: 'dist/<%= pkg.name %>.js',
+				dest: '<%= pkg.name %>.js',
 				options: {
 					alias: ['src/libs/jquery.js:jquery', 'src/libs/underscore.js:underscore', 'src/libs/backbone.js:backbone'],
 					bundleOptions: {
@@ -67,7 +67,7 @@ module.exports = function (grunt) {
 			},
 			dist: {
 				src: ['src/<%= pkg.name %>.js'],
-				dest: 'dist/<%= pkg.name %>.js',
+				dest: '<%= pkg.name %>.js',
 				options: {
 					external: ['jquery', 'underscore', 'backbone'],
 					bundleOptions: {
@@ -75,21 +75,16 @@ module.exports = function (grunt) {
 					}
 				}
 			}
-		},
-		uglify: {
-			'dist/<%= pkg.name %>.min.js': ['dist/<%= pkg.name %>.js']
 		}
 	});
 
 	grunt.registerTask('dev', ['browserify:dev', 'connect', 'watch']);
 	grunt.registerTask('default', ['dev']);
-	grunt.registerTask('build', ['docco', 'jshint', 'browserify:dist', 'uglify', 'banner']);
+	grunt.registerTask('build', ['docco', 'jshint', 'browserify:dist', 'banner']);
 	grunt.registerTask('banner', function() {
 		var banner = grunt.config.get('banner'),
-			fileContent = grunt.file.read('dist/gridder.js'),
-			minFileContent = grunt.file.read('dist/gridder.min.js');
+			fileContent = grunt.file.read('gridder.js');
 
-		grunt.file.write('dist/gridder.js', banner + fileContent);
-		grunt.file.write('dist/gridder.min.js', banner + minFileContent);
+		grunt.file.write('gridder.js', banner + fileContent);
 	});
 };

@@ -23,7 +23,7 @@
 			<div id="gridPatos"></div>
 		</div>
 
-		<script src="../dist/gridder.js"></script>
+		<script src="../gridder.js"></script>
 		<script type="text/javascript">
 			$(document).on('click', '.btn-teste', function(ev) {
 				ev.preventDefault();
@@ -53,18 +53,20 @@
 				'Donald': '<span class="badge">Donald</span>'
 			});
 
-			gridPatos.addCols([
-				{
-					position: 'last',
-					header: '',
-					content: '<button class="btn btn-xs btn-danger btn-teste" id="{{id}}">Detalhes</button>'
-				},
-				{
-					position: 'last',
-					header: '',
-					content: '<button class="btn btn-xs btn-primary btn-teste" id="{{id}}">Detalhes</button>'
-				}
-			]);
+			setTimeout(function() {
+				gridPatos.addCols([
+					{
+						position: 'last',
+						header: '',
+						content: '<button class="btn btn-xs btn-danger btn-teste" id="{{id}}">Detalhes</button>'
+					},
+					{
+						position: 'last',
+						header: '',
+						content: '<button class="btn btn-xs btn-primary btn-teste" id="{{id}}">Detalhes</button>'
+					}
+				]);
+			});
 
 			setInterval(function() {
 				var oldPatos = Patos.toJSON();

@@ -1,6 +1,6 @@
 /**
  * Baltazzar Gridder %>
- * Versão: 0.2.1
+ * Versão: 0.2.2
  * Módulo para exibição de registros de maneira tabular.
  * Autor: BaltazZar Team
  */
@@ -88,49 +88,51 @@ module.exports = Backbone.View.extend({
 		var that = this,
 			content = null;
 
-		_.each(options, function(option) {
+		if(this.options.collection.length > 0) {
+			_.each(options, function(option) {
 
-			/* hack para atualizar o DOM antes de inserir novos elementos */
-			setTimeout(function() {
-				var position = option.position,
-					header = option.header ? option.header : '';
+				/* hack para atualizar o DOM antes de inserir novos elementos */
+				setTimeout(function() {
+					var position = option.position,
+						header = option.header ? option.header : '';
 
-				if(position && position === 'first') {
-					position = 0;
-				} else if(position && position === 'last') {
-					position = that.$('table > thead > tr > th').length;
-				} else if(position > that.$('table > thead > tr > th').length) {
-					position = that.$('table > thead > tr > th').length;
-				} else {
-					position = position;
-				}
-
-				try {
-					if(position === 0) {
-						that.$('table > thead > tr > th:first-child').before('<th>' + header + '</th>');
+					if(position && position === 'first') {
+						position = 0;
+					} else if(position && position === 'last') {
+						position = that.$('table > thead > tr > th').length;
+					} else if(position > that.$('table > thead > tr > th').length) {
+						position = that.$('table > thead > tr > th').length;
 					} else {
+						position = position;
+					}
+
+					try {
+						if(position === 0) {
+							that.$('table > thead > tr > th:first-child').before('<th>' + header + '</th>');
+						} else {
+							that.$('table > thead > tr > th:nth-child(' + position + ')').after('<th>' + header + '</th>');
+						}
+					} catch(err) {
+						position = that.$('table > thead > tr > th').length;
 						that.$('table > thead > tr > th:nth-child(' + position + ')').after('<th>' + header + '</th>');
 					}
-				} catch(err) {
-					position = that.$('table > thead > tr > th').length;
-					that.$('table > thead > tr > th:nth-child(' + position + ')').after('<th>' + header + '</th>');
-				}
 
-				_.each(that.$('table > tbody > tr'), function(row) {
-					var model = that.options.collection.get(row.id);
+					_.each(that.$('table > tbody > tr'), function(row) {
+						var model = that.options.collection.get(row.id);
 
-					content = option.content.replace(/\{\{(\w*)\}\}/gi, function(test, match) {
-						return model.get(match);
+						content = option.content.replace(/\{\{(\w*)\}\}/gi, function(test, match) {
+							return model.get(match);
+						});
+
+						if(position === 0) {
+							$(row).find('td:first-child').before('<td style="width:1px;">' + content + '</td>');
+						} else {
+							$(row).find('td:nth-child(' + position + ')').after('<td style="width:1px;">' + content + '</td>');
+						}
 					});
-
-					if(position === 0) {
-						$(row).find('td:first-child').before('<td style="width:1px;">' + content + '</td>');
-					} else {
-						$(row).find('td:nth-child(' + position + ')').after('<td style="width:1px;">' + content + '</td>');
-					}
-				});
-			}, option.position);
-		});
+				}, option.position);
+			});
+		}
 
 		this.addColsOptions = options;
 	},
