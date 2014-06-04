@@ -51,7 +51,10 @@ module.exports = function (grunt) {
 			},
 			src: {
 				files: ['src/**/*.js', '!src/libs/**/*.js'],
-				tasks: ['browserify:dev']
+				tasks: ['browserify:dev'],
+				options: {
+					livereload: '<%= livereloadPort %>'
+				}
 			}
 		},
 		browserify: {
@@ -59,7 +62,7 @@ module.exports = function (grunt) {
 				src: ['src/<%= pkg.name %>.js'],
 				dest: '<%= pkg.name %>.js',
 				options: {
-					alias: ['src/libs/jquery.js:jquery', 'src/libs/underscore.js:underscore', 'src/libs/backbone.js:backbone'],
+					alias: ['jquery.js:jquery', 'underscore.js:underscore', 'backbone.js:backbone', 'backbone-deep-model.js:backbone-deep-model'],
 					bundleOptions: {
 						standalone: 'baltazzar.<%= pkg.name %>'
 					}

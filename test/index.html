@@ -3,9 +3,9 @@
 		<meta charset="UTF-8">
 		<title>Component Test</title>
 		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-		<script src="../src/libs/jquery.js"></script>
-		<script src="../src/libs/underscore.js"></script>
-		<script src="../src/libs/backbone.js"></script>
+		<script src="../jquery.js"></script>
+		<script src="../underscore.js"></script>
+		<script src="../backbone.js"></script>
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 		<style>
 			body {
@@ -25,59 +25,99 @@
 
 		<script src="../gridder.js"></script>
 		<script type="text/javascript">
-			$(document).on('click', '.btn-teste', function(ev) {
-				ev.preventDefault();
 
-				alert(ev.currentTarget.id + ' clicked!');
-			})
+			// var Patos = new Backbone.Collection([
+			// 	{ id: 1, nome: 'Hugo', apelido: 'Huguinho', hobby: { nome: 'Jogar Bola'} },
+			// 	{ id: 2, nome: 'José', apelido: 'Zezinho', hobby: { nome: 'Nadar' } },
+			// 	{ id: 3, nome: 'Luiz', apelido: 'Luizinho', hobby: { nome: 'Ler' } }
+			// ]);
+
+			var Analistas = new Backbone.Collection([
+				{
+					id: 1,
+					pessoa: {
+						nome: 'Victor',
+						sobrenome: 'Bastos',
+						habilidades: {
+							programacao: {
+								linguagem: 'Javascript'
+							}
+						}
+					}
+				},
+				{
+					id: 2,
+					pessoa: {
+						nome: 'Antonio',
+						sobrenome: 'Furlaneto',
+						habilidades: {
+							programacao: {
+								linguagem: 'C#'
+							}
+						}
+					}
+				}
+			]);
+
+			$(document).on('click', '.btn-ok', function(ev) {
+				console.log(ev.currentTarget);
+			});
 
 			var Gridder = baltazzar.gridder;
 
-			var Patos = new Backbone.Collection([
-				{ id: 1, nome: 'Hugo', apelido: 'Huguinho', hobby: { nome: 'Jogar Bola'} },
-				{ id: 2, nome: 'José', apelido: 'Zezinho', hobby: { nome: 'Nadar' } },
-				{ id: 3, nome: 'Luiz', apelido: 'Luizinho', hobby: { nome: 'Ler' } }
+			var gridder = new Gridder({
+				element: $('#gridPatos'),
+				collection: Analistas,
+				cols: {
+					'pessoa.habilidades.programacao.linguagem' : 'LINGUAGEM'
+				},
+				cssClasses: ['table-condensed', 'table-hover']
+			}).changeValues({
+
+			}).getRows(function(row, model) {
+
+			}).getCols(function(col, model) {
+
+			}).addCols([
+				{
+					position: 0,
+					header: 'NOME',
+					content: '{{pessoa.nome}} {{pessoa.sobrenome}}'
+				},
+				{
+					content: '<button class="btn btn-xs btn-block btn-success btn-ok" id="{{id}}">OK</button>'
+				}
 			]);
 
-			var gridPatos = new Gridder({
-				el: '#gridPatos',
-				cssClasses: ['table-hover', 'table-condensed', 'table-fixed'],
-				collection: Patos,
-				headers: ['nome:Nome', 'apelido:Apelido', 'hobby.nome:Hobby']
-			});
+			// setTimeout(function() {
+			// 	Analistas.remove(Analistas.get(1));
+			// }, 3000);
 
-			gridPatos.changeValues({
-				'Huguinho': '<span class="badge">Huguinho</span>',
-				'Zezinho': '<span class="badge">Zezinho</span>',
-				'Luizinho': '<span class="badge">Luizinho</span>',
-				'Donald': '<span class="badge">Donald</span>'
-			});
+			// setTimeout(function() {
+			// 	Analistas.add({id: 1,
+			// 		pessoa: {
+			// 			nome: 'Victor',
+			// 			sobrenome: 'Bastos',
+			// 			habilidades: {
+			// 				programacao: {
+			// 					linguagem: 'Javascript'
+			// 				}
+			// 			}
+			// 		}});
+			// }, 6000);
 
-			setTimeout(function() {
-				gridPatos.addCols([
-					{
-						position: 'last',
-						header: '',
-						content: '<button class="btn btn-xs btn-danger btn-teste" id="{{id}}">Detalhes</button>'
-					},
-					{
-						position: 'last',
-						header: '',
-						content: '<button class="btn btn-xs btn-primary btn-teste" id="{{id}}">Detalhes</button>'
-					}
-				]);
-			});
+			// var Patos = new Backbone.Collection([
+			// 	{ id: 1, nome: 'Hugo', apelido: 'Huguinho', hobby: { nome: 'Jogar Bola'} },
+			// 	{ id: 2, nome: 'José', apelido: 'Zezinho', hobby: { nome: 'Nadar' } },
+			// 	{ id: 3, nome: 'Luiz', apelido: 'Luizinho', hobby: { nome: 'Ler' } }
+			// ]);
 
-			setInterval(function() {
-				var oldPatos = Patos.toJSON();
-
-				Patos.reset();
-
-				setTimeout(function() {
-					Patos.reset(oldPatos);
-				}, 5000);
-
-			}, 5000);
+			// var gridPatos = new Gridder({
+			// 	el: '#gridPatos',
+			// 	cssClasses: ['table-hover', 'table-condensed', 'table-fixed'],
+			// 	collection: Patos,
+			// 	headers: ['nome:Nome', 'apelido:Apelido', 'hobby.nome:Hobby']
+			// });
 		</script>
 	</body>
 </html>
