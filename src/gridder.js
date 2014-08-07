@@ -76,6 +76,10 @@ module.exports = Backbone.View.extend({
 
 		_.each(attrs, function(attr, key) {
 			cssClass = this.colsKeys[key].replace(/\./g, '-');
+			
+			// Parse null values to render empty
+			attr = attr == null ? '' : attr;
+
 			col = '<td class="col-{{class}}">' + attr + '</td>';
 			cols.push(col.replace('{{class}}', cssClass));
 		}, this);
